@@ -1,0 +1,1 @@
+"""LicitaI Piloto - application package."""

@@ -1,0 +1,1 @@
+"""LicitaI Piloto - infrastructure package."""
