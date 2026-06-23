@@ -181,26 +181,7 @@ curl -X POST http://localhost:8000/api/v1/dfd/ \
 
 ---
 
-## 5. Conexão via Composio
-
-Se você usa **Composio** com GitHub e Supabase configurados:
-
-```bash
-# Conectar repositório
-composio push --repo licitai-piloto
-
-# Sincronizar schema com Supabase
-composio supabase push --project-ref SEU-REF
-
-# Disparar deploy
-composio deploy --target vercel
-```
-
-(Comandos variam conforme a configuração do seu Composio. Os scripts `infra/scripts/setup.sh` e `smoke.sh` automatizam o que puder.)
-
----
-
-## 6. Customizando o LLM
+## 5. Customizando o LLM
 
 ### Opção A — OpenAI (recomendado para piloto)
 ```bash
@@ -269,22 +250,19 @@ cd apps/api && pytest
 
 | Documento | Conteúdo |
 |---|---|
-| [docs/01-composio-verificacao.md](docs/01-composio-verificacao.md) | Relatório da verificação do Composio no ambiente |
-| [docs/02-github-setup.md](docs/02-github-setup.md) | Como subir para o GitHub (3 opções) |
 | [docs/03-coolify-deploy.md](docs/03-coolify-deploy.md) | Passo a passo de deploy no Coolify |
 
 ---
 
 ## 11. Próximos passos sugeridos
 
-1. **Subir para o GitHub** — ver [docs/02-github-setup.md](docs/02-github-setup.md)
-2. **Deploy no Coolify** — ver [docs/03-coolify-deploy.md](docs/03-coolify-deploy.md)
-3. **Rodar o setup** (Passo 1-5 acima) e validar o smoke test
-4. **Criar 3-5 DFDs reais** do seu órgão-piloto
-5. **Avaliar a qualidade** das versões geradas pela IA
-6. **Ajustar o prompt** da Crew-DFD com base no feedback (em `packages/agents/crews/crew_dfd.py`)
-7. **Subir a Crew-Pesquisa** (próximo sprint)
-8. **Adicionar mais chunks da Lei 14.133** ao RAG (em `supabase/seed/`)
+1. **Deploy no Coolify** — ver [docs/03-coolify-deploy.md](docs/03-coolify-deploy.md)
+2. **Rodar o setup** (Passo 1-5 acima) e validar o smoke test
+3. **Criar 3-5 DFDs reais** do seu órgão-piloto
+4. **Avaliar a qualidade** das versões geradas pela IA
+5. **Ajustar o prompt** da Crew-DFD com base no feedback (em `packages/agents/crews/crew_dfd.py`)
+6. **Subir a Crew-Pesquisa** (próximo sprint)
+7. **Adicionar mais chunks da Lei 14.133** ao RAG (em `supabase/seed/`)
 
 ---
 
