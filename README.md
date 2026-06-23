@@ -4,6 +4,11 @@
 > **Stack:** Supabase (Postgres + pgvector + Auth + Storage) + FastAPI + Next.js 15 + CrewAI/LLM.
 
 ---
+## Status
+
+[![GitHub](https://img.shields.io/badge/GitHub-neohclick1986%2Flicitai--piloto-blue)](https://github.com/neohclick1986/licitai-piloto)
+**Repositório:** https://github.com/neohclick1986/licitai-piloto
+
 
 ## 1. O que está pronto
 
