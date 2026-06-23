@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: licitai-api-piloto
+    ports:
+      - "8000:8000"
+    env_file: .env
+    volumes:
+      - .:/app
+    command: uvicorn apps.api.src.main:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
+
+  web:
+    image: node:20-alpine
+    container_name: licitai-web-piloto
+    working_dir: /app/apps/web
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_SUPABASE_URL: ${SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+    volumes:
+      - .:/app
+      - /app/apps/web/node_modules
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: licitai-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    # Para usar GPU: descomentar
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+volumes:
+  ollama_data:
