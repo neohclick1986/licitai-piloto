@@ -1,5 +1,6 @@
 """LicitaI Piloto - Use Case: Criar/Atualizar DFD com revisão por IA."""
 
+import json
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
@@ -9,6 +10,7 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.src.infrastructure.db.database import get_db_with_tenant
+from apps.api.src.infrastructure.db.rag_repository import buscar_chunks_por_artigo
 from packages.agents.crews.crew_dfd import CrewDFD, DFDCrewInput
 from packages.agents.llm.provider import LLMProvider
 
@@ -70,6 +72,9 @@ class CriarDFDUseCase:
         ai_gen_id: UUID | None = None
 
         if entrada.usar_ia and self.llm:
+            contexto_legal = await buscar_chunks_por_artigo(
+                self.db, str(entrada.tenant_id), ["12", "6"]
+            )
             crew = CrewDFD(self.llm)
             saida = await crew.executar(
                 DFDCrewInput(
@@ -77,6 +82,7 @@ class CriarDFDUseCase:
                     processo_id=entrada.processo_id,
                     dfd_inicial=dfd_inicial,
                     contexto_tenant=contexto_tenant,
+                    contexto_legal=contexto_legal,
                 )
             )
             versao_revisada = saida.versao_revisada
@@ -232,5 +238,3 @@ class CriarDFDUseCase:
             ),
         }
 
-
-import json

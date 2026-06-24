@@ -91,7 +91,6 @@ async def criar_processo(
     ).mappings().first()
     numero = f"{ano}/{(count_row['n'] + 1):05d}"
 
-    new_id = UUID("00000000-0000-0000-0000-000000000000")  # gerado pelo DB
     row = (
         await db.execute(
             text("""

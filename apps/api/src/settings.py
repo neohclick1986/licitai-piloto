@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     supabase_anon_key: str
     supabase_service_role_key: str
     supabase_db_url: str
+    supabase_jwt_secret: str
 
     secret_key: str
     jwt_audience: str = "authenticated"
@@ -45,8 +46,6 @@ class Settings(BaseSettings):
     cors_origins: list[str] = ["http://localhost:3000"]
 
 
-import functools
-
-@functools.lru_cache
+@lru_cache
 def get_settings() -> Settings:
     return Settings()

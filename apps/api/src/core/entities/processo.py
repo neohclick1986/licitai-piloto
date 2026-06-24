@@ -1,10 +1,14 @@
 """LicitaI Piloto - Domain: Processo."""
 
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from decimal import Decimal
 from enum import Enum
 from uuid import UUID, uuid4
+
+
+def _now_utc() -> datetime:
+    return datetime.now(timezone.utc)
 
 
 class ProcessoStatus(str, Enum):
@@ -74,8 +78,8 @@ class Processo:
     data_inicio: date | None = None
     area_requisitante: str | None = None
     responsavel_id: UUID | None = None
-    created_at: datetime = field(default_factory=datetime.utcnow)
-    updated_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=_now_utc)
+    updated_at: datetime = field(default_factory=_now_utc)
 
     def pode_transicionar_para(self, novo: ProcessoStatus) -> bool:
         return novo in TRANSICOES_VALIDAS.get(self.status, set())
@@ -86,4 +90,4 @@ class Processo:
                 f"Transição inválida: {self.status.value} -> {novo.value}"
             )
         self.status = novo
-        self.updated_at = datetime.utcnow()
+        self.updated_at = _now_utc()

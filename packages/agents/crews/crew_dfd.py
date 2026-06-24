@@ -9,7 +9,7 @@ Primeira crew funcional do piloto. Roda em modo "lite":
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from uuid import UUID
 
 from packages.agents.llm.provider import LLMProvider, LLMResponse
@@ -65,6 +65,7 @@ class DFDCrewInput:
     processo_id: UUID
     dfd_inicial: dict
     contexto_tenant: dict
+    contexto_legal: list[dict] = field(default_factory=list)
 
 
 @dataclass
@@ -84,11 +85,22 @@ class CrewDFD:
         self.llm = llm
 
     async def executar(self, entrada: DFDCrewInput) -> DFDCrewOutput:
+        contexto_legal_str = ""
+        if entrada.contexto_legal:
+            chunks_text = "\n\n".join(
+                f"[Art. {c.get('metadata', {}).get('artigo', '?')}] {c['texto']}"
+                for c in entrada.contexto_legal
+            )
+            contexto_legal_str = f"""
+**Contexto legal relevante (Lei 14.133/2021 — recuperado via RAG):**
+{chunks_text}
+"""
+
         user_prompt = f"""Analise o DFD preliminar abaixo e gere a revisão.
 
 **Órgão:** {entrada.contexto_tenant.get('razao_social')}
 **Esfera:** {entrada.contexto_tenant.get('esfera')}
-
+{contexto_legal_str}
 **DFD Preliminar (fornecido pelo demandante):**
 ```json
 {json.dumps(entrada.dfd_inicial, ensure_ascii=False, indent=2)}

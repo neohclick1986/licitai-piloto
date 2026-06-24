@@ -24,16 +24,21 @@ _settings = get_settings()
 
 
 def _decode_supabase_jwt(token: str) -> dict[str, Any]:
-    """Decodifica o JWT do Supabase."""
+    """Decodifica e valida o JWT do Supabase (HS256)."""
     try:
-        # Supabase usa HS256 com a service_role_key como secret em dev
-        # Em prod, validar via JWKS do Supabase
-        payload = jwt.get_unverified_claims(token)
+        payload = jwt.decode(
+            token,
+            _settings.supabase_jwt_secret,
+            algorithms=["HS256"],
+            audience=_settings.jwt_audience,
+            options={"verify_aud": bool(_settings.jwt_audience)},
+        )
         return payload
     except JWTError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f"Token inválido: {e}",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
 

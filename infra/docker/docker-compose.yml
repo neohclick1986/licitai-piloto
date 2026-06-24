@@ -15,9 +15,10 @@ services:
     restart: unless-stopped
 
   web:
-    image: node:20-alpine
+    build:
+      context: ../../apps/web
+      dockerfile: Dockerfile
     container_name: licitai-web-piloto
-    working_dir: /app/apps/web
     ports:
       - "3000:3000"
     environment:
@@ -25,9 +26,8 @@ services:
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
       NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
     volumes:
-      - .:/app
-      - /app/apps/web/node_modules
-    command: sh -c "npm install && npm run dev"
+      - ../../apps/web:/app
+      - /app/node_modules
     depends_on:
       - api
     restart: unless-stopped
