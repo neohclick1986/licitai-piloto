@@ -154,6 +154,7 @@ DEBUG=false
 SUPABASE_URL=https://SEU-REF.supabase.co
 SUPABASE_ANON_KEY=eyJ...
 SUPABASE_SERVICE_ROLE_KEY=eyJ...
+SUPABASE_JWT_SECRET=seu-jwt-secret-aqui
 SUPABASE_DB_URL=postgresql+asyncpg://postgres:SENHA@db.SEU-REF.supabase.co:5432/postgres
 
 # Segurança
@@ -243,6 +244,7 @@ services:
       SUPABASE_URL: ${SUPABASE_URL}
       SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
       SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      SUPABASE_JWT_SECRET: ${SUPABASE_JWT_SECRET}
       SUPABASE_DB_URL: ${SUPABASE_DB_URL}
       SECRET_KEY: ${SECRET_KEY}
       CORS_ORIGINS: ${CORS_ORIGINS}
@@ -456,6 +458,7 @@ Antes de abrir para usuários:
 
 ### 11.1 Segurança
 - [ ] SECRET_KEY gerada com 64+ chars
+- [ ] SUPABASE_JWT_SECRET preenchido (Settings → API → JWT Settings)
 - [ ] Todas as env vars preenchidas (sem defaults)
 - [ ] RLS ativo e testado (tente acessar dados de outro tenant)
 - [ ] HTTPS funcionando em todos os subdomínios
@@ -497,6 +500,10 @@ Antes de abrir para usuários:
 ### "Connection refused" no Supabase
 - Verifique `SUPABASE_DB_URL` (formato: `postgresql+asyncpg://postgres:SENHA@db.REF.supabase.co:5432/postgres`)
 - Senha do DB: definida na criação do projeto no Supabase
+
+### "401 Unauthorized" em todo endpoint autenticado
+- `SUPABASE_JWT_SECRET` ausente ou incorreto (obtenha em Settings → API → JWT Settings)
+- Sem ele a API nem inicia; se inicia mas rejeita tokens, o secret está errado
 
 ### "RLS violation" mesmo logado
 - O `tenant_id` não está sendo setado

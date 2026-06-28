@@ -23,6 +23,12 @@ if [[ "$SUPABASE_URL" == *"SEU-PROJECT-REF"* ]]; then
     exit 1
 fi
 
+if [[ -z "$SUPABASE_JWT_SECRET" ]]; then
+    echo "❌ SUPABASE_JWT_SECRET ausente no .env"
+    echo "   Obtenha em: Supabase → Settings → API → JWT Settings"
+    exit 1
+fi
+
 # 3. Supabase CLI
 if ! command -v supabase &> /dev/null; then
     echo "⚠️  Supabase CLI não encontrada. Instale: https://supabase.com/docs/guides/cli"
